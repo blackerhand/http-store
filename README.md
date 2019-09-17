@@ -1,8 +1,6 @@
 # HttpStore
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/http_store`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+This is a http client, based on rest-client. It provide a activerecord table to save the request.
 
 ## Installation
 
@@ -22,7 +20,34 @@ Or install it yourself as:
 
 ## Usage
 
-TODO: Write usage instructions here
+first, you need create migration whit this command.
+
+```
+rake http_store_engine:install:migrations
+```
+
+and you can extend the HttpStore::RestRequest to create your rest-client request.
+
+```ruby 
+class YourRequest < HttpStore::RestRequest
+  def build_request
+    @query_params_hash = {   
+      ..
+    }
+    
+    self.http_method = 'POST'
+    self.url         = 'https://www.example.com'
+  end
+    
+  def response_status_check
+    status_code == 200 && response_hash.access_token.present?
+  end
+    
+  def rsp_success_data
+    response_hash.access_token
+  end
+end
+```
 
 ## Development
 
