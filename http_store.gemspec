@@ -12,7 +12,7 @@ Gem::Specification.new do |spec|
   spec.description = %q{This lib is based on rest-clint http client. It generate a table to store the http request info}
   spec.homepage    = "https://github.com/308820773/http-store"
 
-  spec.metadata["allowed_push_host"] = "http://rubygems.org"
+  spec.metadata["allowed_push_host"] = "https://rubygems.org"
 
   spec.metadata["homepage_uri"]    = spec.homepage
   spec.metadata["source_code_uri"] = "https://github.com/308820773/http-store"
