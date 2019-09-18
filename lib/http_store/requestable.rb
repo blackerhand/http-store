@@ -1,9 +1,11 @@
 module HttpStore
   module Requestable
-    def build_request
-      # callback
+    # will return one hash to set the request meta
+    def set_request
+      {}
     end
 
+    # you need rewrite this checker, when return false the request don't send
     def request_valid?
       true
     end
@@ -12,8 +14,8 @@ module HttpStore
       data_type.to_s.casecmp('json').zero?
     end
 
-    def file_request?
-      @data_hash.to_json.size > GRAPE_API::HTTP_FILE_SIZE_LIMIT
+    def uri
+      "#{url}?#{query_params.to_query}"
     end
 
     def get?
@@ -24,15 +26,16 @@ module HttpStore
       http_method.to_s.casecmp('post').zero?
     end
 
-    def default_request
-      @headers_hash                ||= { charset: 'UTF-8' } # accept: :json
-      @query_params_hash           ||= {}
-      @data_hash                   ||= {}
-      @headers_hash[:content_type] = :json if json_request?
+    def format_request
+      @meta.http_method = get? ? 'GET' : 'POST' # only support get/post
 
-      self.headers      = @headers_hash.to_json
-      self.data         = @data_hash.to_json unless file_request?
-      self.query_params = @query_params_hash.to_json
+      @meta.headers                ||= { charset: 'UTF-8' }
+      @meta.headers[:content_type] = :json if json_request?
+
+      @meta.query_params ||= {}
+      @meta.data         ||= {}
+
+      @meta.request_valid = request_valid?
     end
   end
 end

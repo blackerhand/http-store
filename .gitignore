@@ -9,3 +9,11 @@
 
 # rspec failure tracking
 .rspec_status
+.byebug_history
+
+# Ignore RubyMine files
+.idea
+
+# Ignore bundler config.
+.bundle
+/vendor/bundle
