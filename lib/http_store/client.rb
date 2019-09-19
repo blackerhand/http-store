@@ -6,8 +6,9 @@ module HttpStore
 
     attr_accessor :meta
 
-    include HttpStore::Requestable
-    include HttpStore::Responseable
+    include HttpStore::Helpers::Requestable
+    include HttpStore::Helpers::Responseable
+    include HttpStore::Helpers::Storable
 
     def self.execute(requestable, other_params = {})
       new(requestable:  requestable,

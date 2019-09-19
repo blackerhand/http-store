@@ -8,12 +8,16 @@ require 'rest-client'
 module HttpStore
   extend ActiveSupport::Autoload
 
+  module Helpers
+    extend ActiveSupport::Autoload
+
+    autoload :Requestable
+    autoload :Responseable
+    autoload :Storable
+  end
+
   autoload :Engine
   autoload :VERSION
-
-  autoload :Requestable
-  autoload :Responseable
-  autoload :Storable
   autoload :HttpLog
   autoload :Client
 
