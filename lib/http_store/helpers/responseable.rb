@@ -6,14 +6,6 @@ module HttpStore
         status_code == 200
       end
 
-      def response_error_handle
-        'error'
-      end
-
-      def response_success_handle
-        'success'
-      end
-
       def json_response?
         response_headers_hash['content_type'].to_s =~ /json/
       end
@@ -24,7 +16,12 @@ module HttpStore
         @meta.response_headers = response_obj.headers
 
         @meta.response_valid = !!response_status_check
-        @meta.response_data  = response_valid ? response_success_handle : response_error_handle
+        @meta.response_data  = build_response_data
+        raise HttpStore::RequestError, '三方请求异常, 请与管理员联系' if response_data.blank?
+      end
+
+      def build_response_data
+        response_valid ? 'success' : 'error'
       end
     end
   end

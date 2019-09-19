@@ -1,9 +1,9 @@
 require 'active_record'
 require 'rails/engine'
 require 'active_support/core_ext/module'
-
 require 'hashie'
 require 'rest-client'
+require 'http_store/engine'
 
 module HttpStore
   extend ActiveSupport::Autoload

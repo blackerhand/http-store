@@ -24,7 +24,7 @@ class CreateHttpLogs < ActiveRecord::Migration[5.2]
       t.text :response_data, comment: '格式化后的 response'
 
       # relation
-      t.string :type, comment: '请求类型'
+      t.string :client_type, comment: '请求类型'
       t.string :requestable_id, comment: '外键 ID'
       t.string :requestable_type, comment: '外键 类型'
 

@@ -36,7 +36,7 @@ module HttpStore
       end
 
       def storable_string(str)
-        { digest: Digest::SHA1.hexdigest(str), origin: str[0..1000] } if str.length > STRING_LIMIT_SIZE
+        str.length > STRING_LIMIT_SIZE ? { digest: Digest::SHA1.hexdigest(str), origin: str[0..1000] } : str
       end
     end
   end

@@ -2,7 +2,7 @@ module HttpStore
   class Client
     META_KEYS = %w[http_method url data_type headers query_params data other_params request_valid
                    status_code response response_headers response_valid response_data
-                   request_digest type requestable requestable_id requestable_type response_obj]
+                   request_digest client_type requestable requestable_id requestable_type response_obj]
 
     attr_accessor :meta
 
@@ -11,9 +11,11 @@ module HttpStore
     include HttpStore::Helpers::Storable
 
     def self.execute(requestable, other_params = {})
-      new(requestable:  requestable,
-          type:         to_s,
-          other_params: other_params)
+      new(requestable:      requestable,
+          requestable_id:   requestable.try(:id),
+          requestable_type: requestable.try(:class).try(:to_s),
+          client_type:      to_s,
+          other_params:     other_params)
     end
 
     def initialize(args)
