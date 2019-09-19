@@ -1,6 +1,6 @@
 module HttpStore
   class Client
-    META_KEYS = %W[http_method url data_type headers query_params data other_params request_valid
+    META_KEYS = %w[http_method url data_type headers query_params data other_params request_valid
                    status_code response response_headers response_valid response_data
                    request_digest type requestable requestable_id requestable_type response_obj]
 
@@ -26,15 +26,7 @@ module HttpStore
 
       build_response
     ensure
-      store_request if other_params.store_class != false
-    end
-
-    def store_request
-      (other_params.store_class || HttpStore::HttpLog).new(storable).save
-    end
-
-    def storable
-      { url: 'test' }
+      store_request
     end
 
     def gen_request_digest(str)

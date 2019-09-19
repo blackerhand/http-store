@@ -6,9 +6,6 @@ require 'hashie'
 require 'rest-client'
 
 module HttpStore
-  class RequestError < StandardError; end
-
-
   extend ActiveSupport::Autoload
 
   autoload :Engine
@@ -16,6 +13,9 @@ module HttpStore
 
   autoload :Requestable
   autoload :Responseable
+  autoload :Storable
   autoload :HttpLog
   autoload :Client
+
+  class RequestError < StandardError; end
 end
