@@ -2,21 +2,28 @@ module HttpStore
   module Helpers
     module Storable
       STRING_LIMIT_SIZE = 30_000
-      STORE_KEYS        = HttpStore::Client::META_KEYS - %w[response_obj requestable]
+
+      def storeable_record
+        return unless HttpStore.config.store_enable
+
+        @storeable_model ||= HttpStore.config.store_class.find_by(request_digest: request_digest, response_valid: true)
+      end
 
       # you can rewrite this callback, to store the request
       def store_request
-        return if other_params.store_class == false
+        return unless HttpStore.config.store_enable
 
-        (other_params.store_class || HttpStore::HttpLog).new(storable_meta).save
+        storeable_class.new(storable_meta).save
       end
+
+      private
 
       def storable_meta
         @storable_meta ||= gen_storable_meta
       end
 
       def gen_storable_meta
-        @meta.slice(*STORE_KEYS).map do |k, v|
+        @meta.slice(*HttpStore::STORE_KEYS).map do |k, v|
           [k, v.is_a?(Hash) ? storable_hash(v).to_json[0..STRING_LIMIT_SIZE] : v]
         end.to_h
       end
@@ -28,6 +35,8 @@ module HttpStore
                 storable_hash(v)
               when String
                 storable_string(v)
+              when Class
+                v.to_s
               else
                 v
               end
