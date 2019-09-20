@@ -13,7 +13,7 @@ module HttpStore
       def store_request
         return unless HttpStore.config.store_enable
 
-        storeable_class.new(storable_meta).save
+        HttpStore.config.store_class.new(storable_meta).save
       end
 
       private

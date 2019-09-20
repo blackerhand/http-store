@@ -41,7 +41,7 @@ module HttpStore
     end
 
     def add_meta(hash)
-      @meta.merge! Hashie::Mash.new(hash).slice(*META_KEYS)
+      @meta.merge! Hashie::Mash.new(hash).slice(*HttpStore::REQUEST_KEYS)
     end
 
     def execute

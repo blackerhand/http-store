@@ -3,7 +3,7 @@ class CreateHttpLogs < ActiveRecord::Migration[5.2]
     create_table :http_logs do |t|
       # request
       t.string :http_method, comment: '请求方法'
-      t.string :url, comment: '请求 URL'
+      t.text :url, comment: '请求 URL'
       t.string :data_type, comment: 'data 参数类型 (form/json)'
       t.text :headers, comment: '请求 header'
       t.text :query_params, comment: 'url 参数'
