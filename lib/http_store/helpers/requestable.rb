@@ -51,7 +51,7 @@ module HttpStore
       end
 
       def gen_request_digest
-        Digest::SHA1.hexdigest(storable_hash(request_digest_hash).to_json)
+        Digest::SHA1.hexdigest(storable(request_digest_hash).to_json)
       end
     end
   end

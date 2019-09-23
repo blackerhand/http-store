@@ -36,7 +36,7 @@ module HttpStore
         {
           status_code:      status,
           response_headers: headers,
-          response:         (body.try(:body) || body).to_h
+          response:         body.try(:body) || body
         }
       end
     end

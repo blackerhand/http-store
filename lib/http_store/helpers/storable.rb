@@ -22,24 +22,22 @@ module HttpStore
 
       def gen_storable_meta
         @meta.slice(*HttpStore::STORE_KEYS).map do |k, v|
-          [k, v.is_a?(Hash) ? storable_hash(v).to_json[0..STRING_LIMIT_SIZE] : v]
+          [k, v.is_a?(Hash) || v.is_a?(Array) ? storable(v).to_json[0..STRING_LIMIT_SIZE] : v]
         end.to_h
       end
 
-      def storable_hash(hash)
-        hash.map do |k, v|
-          [k, case v
-              when Hash
-                storable_hash(v)
-              when String
-                storable_string(v)
-              when Class
-                v.to_s
-              else
-                v
-              end
-          ]
-        end.to_h
+      def storable(value)
+        case value
+        when Hash
+          value.map { |k, v| [k, storable(v)] }.to_h
+        when Array
+          value.map { |v| storable(v) }
+        when String
+          json = JSON.parse(v) rescue nil
+          json ? storable(json) : storable_string(v)
+        else
+          v.try(:to_h) || v.try(:to_a) || v
+        end
       end
 
       def storable_string(str)

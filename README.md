@@ -82,7 +82,7 @@ Default use activerecord, you can to rewrite it by setting
 
 ### File storable
 
-When request/response having a file(size limit 30_000), it will use `storable_hash` to format to a hash, `{digest: '', origin: data[0..1000]'}` 
+When request/response having a file(size limit 30_000), it will use `storable(data)` to format to a hash, `{digest: '', origin: data[0..1000]'}` 
 
 ## Development
 
