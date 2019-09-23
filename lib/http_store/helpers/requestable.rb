@@ -39,14 +39,18 @@ module HttpStore
         @meta.requestable_id   = requestable.try(:id)
         @meta.requestable_type = requestable.try(:class).try(:to_s)
         @meta.client_type      = self.class.to_s
+        @meta.force            = @meta.other_params.delete(:force) || false
         @meta.request_digest   = gen_request_digest
 
         @meta.request_valid = request_valid?
       end
 
+      def request_digest_hash
+        @meta.slice(*HttpStore::DIGEST_KEYS)
+      end
+
       def gen_request_digest
-        request_str = storable_hash(@meta.slice(*HttpStore::DIGEST_KEYS)).to_json
-        Digest::SHA1.hexdigest(request_str)
+        Digest::SHA1.hexdigest(storable_hash(request_digest_hash).to_json)
       end
     end
   end

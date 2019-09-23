@@ -13,6 +13,7 @@ class CreateHttpLogs < ActiveRecord::Migration[5.2]
       t.text :other_params, comment: '其他自定义参数, 用于构建 query_params/data_type'
       t.string :request_digest, comment: '请求唯一 id'
       t.boolean :request_valid, comment: '请求是否符合规范, 若为 false, 不会发起请求'
+      t.boolean :force, comment: '忽略缓存, 强制请求'
 
       # response
       t.integer :status_code, comment: 'response http code'
