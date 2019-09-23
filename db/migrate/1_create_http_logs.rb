@@ -28,6 +28,7 @@ class CreateHttpLogs < ActiveRecord::Migration[5.2]
       t.string :client_type, comment: '请求类型'
       t.string :requestable_id, comment: '外键 ID'
       t.string :requestable_type, comment: '外键 类型'
+      t.integer :parent_id
 
       t.timestamps
     end

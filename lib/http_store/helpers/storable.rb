@@ -6,14 +6,29 @@ module HttpStore
       def storeable_record
         return unless HttpStore.config.store_enable
 
-        @storeable_model ||= HttpStore.config.store_class.find_by(request_digest: request_digest, response_valid: true)
+        @storeable_record ||= HttpStore.config.store_class.find_by(request_digest: request_digest, response_valid: true)
+      end
+
+      def load_storeable_record
+        return if storeable_record.nil?
+
+        attrs =
+          storeable_record.attributes.slice(*HttpStore::ALL_KEYS).map do |k, v|
+            [k, v.is_a?(String) ? re_storable(v) : v]
+          end.to_h
+
+        @meta.parent_id = storeable_record.id
+        @meta.reverse_merge! attrs
       end
 
       # you can rewrite this callback, to store the request
       def store_request
         return unless HttpStore.config.store_enable
 
-        HttpStore.config.store_class.new(storable_meta).save
+        @parent_storeable_record = storeable_record
+        @storeable_record        = HttpStore.config.store_class.new(storable_meta)
+        @storeable_record.parent = @parent_storeable_record if @parent_storeable_record.present?
+        save!
       end
 
       def storable_meta
@@ -24,6 +39,10 @@ module HttpStore
         @meta.slice(*HttpStore::STORE_KEYS).map do |k, v|
           [k, v.is_a?(Hash) || v.is_a?(Array) ? storable(v).to_json[0..STRING_LIMIT_SIZE] : v]
         end.to_h
+      end
+
+      def re_storable(value)
+
       end
 
       def storable(value)

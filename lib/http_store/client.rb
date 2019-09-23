@@ -17,7 +17,7 @@ module HttpStore
       return unless request_valid?
 
       # exist request or not force, return
-      return if !force && storeable_record.present?
+      load_storeable_record and return if !force && storeable_record.present?
 
       execute # send request
       raise HttpStore::RequestError, 'response_obj is nil' if response_obj.nil?
