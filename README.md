@@ -18,36 +18,71 @@ Or install it yourself as:
 
     $ gem install http_store
 
-## Usage
+## Default Usage
 
 first, you need create migration whit this command.
 
-```
-rake http_store_engine:install:migrations
+```bash
+rake http_store_engine:install:migrations # create table(default)
+rails generator http_store:initializer    # create global settings
 ```
 
-and you can extend the HttpStore::RestRequest to create your rest-client request.
 
-```ruby 
-class YourRequest < HttpStore::RestRequest
-  def build_request
-    @query_params_hash = {   
-      ..
+### HttpStore::Client
+you can extend the `HttpStore::Client` to create your rest-client request.
+
+```ruby
+class BaseClient < HttpStore::Client  
+  # support `http_method url data_type headers query_params data` keys
+  # url not include the query, use query_params to set query
+  def set_request
+    {
+      data_type:   'json', # support json/form default form 
+      data:        {},     # http body data
+      headers:     {},     # request headers
+      http_method: 'post', # support get/post default post
+      url:         'url'
     }
-    
-    self.http_method = 'POST'
-    self.url         = 'https://www.example.com'
+  end              
+                                 
+  # generate you request digest meta data,
+  # default keys is `http_method url data_type data other_params requestable_id requestable_type`  
+  def request_digest_hash  
+    super.merge(test: 'your value')  
   end
-    
-  def response_status_check
-    status_code == 200 && response_hash.access_token.present?
+                          
+  # request checker, default is true, if return falsely the request not send 
+  def request_valid?
+    true 
+  end  
+
+  # response valid, check response, if return true, next same request will use cache 
+  def response_valid?
+    status_code == 200 
   end
-    
-  def rsp_success_data
-    response_hash.access_token
+           
+  def build_response_data
+    if response_valid
+      response.data
+    else
+      response.error
+    end
   end
 end
 ```
+
+### HttpStore::HttpLog
+
+Default use activerecord, you can to rewrite it by setting
+
+### Configuration
+
+- store_enable: default is true
+- store_class: default is `HttpStore::HttpLog`
+
+### File storable
+
+When request/response having a file(size limit 30_000), it will use `storable_hash` to format to a hash, `{digest: '', origin: data[0..1000]'}` 
 
 ## Development
 

@@ -2,7 +2,7 @@ module HttpStore
   module Helpers
     module Responseable
       # check response message is right, if is right
-      def response_status_check
+      def response_valid?
         status_code == 200
       end
 
@@ -15,7 +15,7 @@ module HttpStore
         @meta.response         = json_safe_parse(response_obj.body)
         @meta.response_headers = response_obj.headers
 
-        @meta.response_valid = !!response_status_check
+        @meta.response_valid = response_valid?
         @meta.response_data  = build_response_data
         raise HttpStore::RequestError, '三方请求异常, 请与管理员联系' if response_data.blank?
       end

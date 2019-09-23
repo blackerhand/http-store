@@ -13,7 +13,7 @@ module HttpStore
   META_KEYS     = %w[request_digest client_type requestable_id requestable_type]
   TMP_KEYS      = %w[requestable response_obj]
 
-  DIGEST_KEYS = %w[http_method url data_type data other_params requestable_id requestable_type ]
+  DIGEST_KEYS = %w[http_method url data_type data other_params requestable_id requestable_type]
   ALL_KEYS    = REQUEST_KEYS + RESPONSE_KEYS + META_KEYS + TMP_KEYS
   STORE_KEYS  = REQUEST_KEYS + RESPONSE_KEYS + META_KEYS
 

@@ -45,6 +45,7 @@ module HttpStore
         @meta.request_valid = request_valid?
       end
 
+      # http_method url data_type data other_params requestable_id requestable_type
       def request_digest_hash
         @meta.slice(*HttpStore::DIGEST_KEYS)
       end
