@@ -33,10 +33,10 @@ module HttpStore
         when Array
           value.map { |v| storable(v) }
         when String
-          json = JSON.parse(v) rescue nil
-          json ? storable(json) : storable_string(v)
+          json = JSON.parse(value) rescue nil
+          json ? storable(json) : storable_string(value)
         else
-          v.try(:to_h) || v.try(:to_a) || v
+          value.try(:to_h) || value.try(:to_a) || value
         end
       end
 

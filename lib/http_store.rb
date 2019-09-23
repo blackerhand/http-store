@@ -27,6 +27,12 @@ module HttpStore
     autoload :Storable
   end
 
+  module Middleware
+    extend ActiveSupport::Autoload
+
+    autoload :RequestLog
+  end
+
   autoload :Engine
   autoload :VERSION
   autoload :HttpLog
