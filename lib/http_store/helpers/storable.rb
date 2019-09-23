@@ -16,8 +16,6 @@ module HttpStore
         HttpStore.config.store_class.new(storable_meta).save
       end
 
-      private
-
       def storable_meta
         @storable_meta ||= gen_storable_meta
       end
