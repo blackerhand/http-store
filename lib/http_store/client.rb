@@ -23,6 +23,7 @@ module HttpStore
       raise HttpStore::RequestError, 'response_obj is nil' if response_obj.nil?
 
       build_response
+      after_response
     ensure
       store_request
     end

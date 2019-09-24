@@ -23,6 +23,9 @@ module HttpStore
       def build_response_data
         response_valid ? 'success' : 'error'
       end
+
+      # callback
+      def after_response; end
     end
   end
 end
