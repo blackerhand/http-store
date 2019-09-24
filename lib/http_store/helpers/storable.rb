@@ -6,7 +6,7 @@ module HttpStore
       def storeable_record
         return unless HttpStore.config.store_enable
 
-        @storeable_record ||= HttpStore.config.store_class.find_by(request_digest: request_digest, response_valid: true)
+        @storeable_record ||= HttpStore.config.store_class.find_by(request_digest: @meta.request_digest, response_valid: true)
       end
 
       def load_storeable_record
@@ -14,21 +14,24 @@ module HttpStore
 
         attrs =
           storeable_record.attributes.slice(*HttpStore::ALL_KEYS).map do |k, v|
-            [k, v.is_a?(String) ? re_storable(v) : v]
+            [k, v.is_a?(String) ? json_safe_parse(v) : v]
           end.to_h
 
-        @meta.parent_id = storeable_record.id
         @meta.reverse_merge! attrs
+        @meta.parent_id = storeable_record.id
       end
 
       # you can rewrite this callback, to store the request
       def store_request
         return unless HttpStore.config.store_enable
 
-        @parent_storeable_record = storeable_record
-        @storeable_record        = HttpStore.config.store_class.new(storable_meta)
-        @storeable_record.parent = @parent_storeable_record if @parent_storeable_record.present?
-        save!
+        @meta.parent_id = storeable_record.id if use_cache?
+        @storeable_record = HttpStore.config.store_class.new(storable_meta)
+        @storeable_record.save!
+      end
+
+      def use_cache?
+        @use_cache ||= !@meta.force && storeable_record.present?
       end
 
       def storable_meta
@@ -39,10 +42,6 @@ module HttpStore
         @meta.slice(*HttpStore::STORE_KEYS).map do |k, v|
           [k, v.is_a?(Hash) || v.is_a?(Array) ? storable(v).to_json[0..STRING_LIMIT_SIZE] : v]
         end.to_h
-      end
-
-      def re_storable(value)
-
       end
 
       def storable(value)
@@ -61,6 +60,10 @@ module HttpStore
 
       def storable_string(str)
         str.length > STRING_LIMIT_SIZE ? { digest: Digest::SHA1.hexdigest(str), origin: str[0..1000] } : str
+      end
+
+      def json_safe_parse(str)
+        JSON.parse(str) rescue str
       end
     end
   end

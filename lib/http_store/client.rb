@@ -17,7 +17,7 @@ module HttpStore
       return unless request_valid?
 
       # exist request or not force, return
-      load_storeable_record and return if !force && storeable_record.present?
+      load_storeable_record and return if use_cache?
 
       execute # send request
       raise HttpStore::RequestError, 'response_obj is nil' if response_obj.nil?
@@ -64,10 +64,6 @@ module HttpStore
       # :nocov:
       e.response
       # :nocov:
-    end
-
-    def json_safe_parse(str)
-      JSON.parse(str) rescue str
     end
   end
 end

@@ -31,7 +31,8 @@ module HttpStore
           http_method:  request.request_method,
           data:         request.params,
           headers:      request.headers.select { |k, _v| k.start_with? 'HTTP_' }.to_h,
-          query_params: request.query_parameters
+          query_params: request.query_parameters,
+          force:        true,
         }
       end
 

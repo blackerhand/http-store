@@ -10,7 +10,7 @@ module HttpStore
 
   REQUEST_KEYS  = %w[http_method url data_type headers query_params data other_params force request_valid]
   RESPONSE_KEYS = %w[status_code response response_headers response_data response_valid]
-  META_KEYS     = %w[request_digest client_type requestable_id requestable_type]
+  META_KEYS     = %w[request_digest client_type parent_id requestable_id requestable_type]
   TMP_KEYS      = %w[requestable response_obj]
 
   DIGEST_KEYS = %w[http_method url data_type data other_params requestable_id requestable_type]
