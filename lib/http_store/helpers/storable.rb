@@ -6,7 +6,7 @@ module HttpStore
       def storeable_record
         return unless HttpStore.config.store_enable
 
-        @storeable_record ||= HttpStore.config.store_class.find_by(request_digest: @meta.request_digest, response_valid: true)
+        @storeable_record ||= HttpStore.config.store_class.find_by(request_digest: @meta.request_digest, cache_response: true)
       end
 
       def load_storeable_record
@@ -25,7 +25,7 @@ module HttpStore
       def store_request
         return unless HttpStore.config.store_enable
 
-        @meta.parent_id = storeable_record.id if use_cache?
+        @meta.parent_id   = storeable_record.id if use_cache?
         @storeable_record = HttpStore.config.store_class.new(storable_meta)
         @storeable_record.save!
       end
