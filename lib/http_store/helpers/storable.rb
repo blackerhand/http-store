@@ -6,7 +6,7 @@ module HttpStore
       def storeable_record
         return unless HttpStore.config.store_enable
 
-        @storeable_record ||= HttpStore.config.store_class.find_by(request_digest: @meta.request_digest, cache_response: true)
+        @storeable_record ||= HttpStore.config.store_class.where(request_digest: @meta.request_digest, cache_response: true).order(id: :desc).limit(1)
       end
 
       def load_storeable_record
