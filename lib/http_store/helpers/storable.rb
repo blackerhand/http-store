@@ -26,16 +26,12 @@ module HttpStore
         return unless HttpStore.config.store_enable
 
         @meta.parent_id   = storeable_record.id if use_cache?
-        @storeable_record = HttpStore.config.store_class.new(storable_meta)
+        @storeable_record = HttpStore.config.store_class.new(gen_storable_meta)
         @storeable_record.save!
       end
 
       def use_cache?
         @use_cache ||= !@meta.force && storeable_record.present?
-      end
-
-      def storable_meta
-        @storable_meta ||= gen_storable_meta
       end
 
       def gen_storable_meta
