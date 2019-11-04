@@ -52,8 +52,10 @@ module HttpStore
         when String
           json = JSON.parse(value) rescue nil
           json ? storable(json) : storable_string(value)
-        else
+        when TrueClass, FalseClass, NilClass, Numeric
           value
+        else
+          storable_string(value.to_s)
         end
       end
 
