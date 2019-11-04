@@ -36,7 +36,10 @@ module HttpStore
 
       def gen_storable_meta
         @meta.slice(*HttpStore::STORE_KEYS).map do |k, v|
-          [k, v.is_a?(Hash) || v.is_a?(Array) ? storable(v).to_json[0..STRING_LIMIT_SIZE] : v]
+          storable_v = storable(v)
+          storable_v = storable_v.to_json[0..STRING_LIMIT_SIZE] if v.is_a?(Hash) || v.is_a?(Array)
+
+          [k, storable_v]
         end.to_h
       end
 
@@ -50,12 +53,16 @@ module HttpStore
           json = JSON.parse(value) rescue nil
           json ? storable(json) : storable_string(value)
         else
-          value.try(:to_h) || value.try(:to_a) || value
+          value
         end
       end
 
       def storable_string(str)
-        str.length > STRING_LIMIT_SIZE ? { digest: Digest::SHA1.hexdigest(str), origin: str[0..1000] } : str
+        if str.encoding.name == "UTF-8"
+          str.length > STRING_LIMIT_SIZE ? { digest: Digest::SHA1.hexdigest(str), origin: str[0..1000] } : str
+        else
+          { digest: Digest::SHA1.hexdigest(str) }
+        end
       end
 
       def json_safe_parse(str)
