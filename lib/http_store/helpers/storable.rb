@@ -60,11 +60,10 @@ module HttpStore
       end
 
       def storable_string(str)
-        if str.encoding.name == "UTF-8"
-          str.length > STRING_LIMIT_SIZE ? { digest: Digest::SHA1.hexdigest(str), origin: str[0..1000] } : str
-        else
-          { digest: Digest::SHA1.hexdigest(str) }
-        end
+        str = str.clone.encode('UTF-8')
+        str.length > STRING_LIMIT_SIZE ? { digest: Digest::SHA1.hexdigest(str), origin: str[0..1000] } : str
+      rescue
+        { digest: Digest::SHA1.hexdigest(str) }
       end
 
       def json_safe_parse(str)
