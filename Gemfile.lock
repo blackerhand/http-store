@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    http_store (0.3.24)
+    http_store (0.3.25)
       activerecord (>= 5.0, < 6.1)
       hashie (~> 3.0)
       rails (>= 5, < 7)

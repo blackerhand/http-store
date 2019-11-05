@@ -29,7 +29,11 @@ module HttpStore
         @storeable_record = HttpStore.config.store_class.new(gen_storable_meta)
         @storeable_record.save!
       rescue ActiveRecord::StatementInvalid
-        debugger
+
+        Rails.logger.info(@storeable_record.response)
+        Rails.logger.info(@storeable_record.response.encoding)
+        Rails.logger.info(@storeable_record.response.first.encoding)
+        Rails.logger.info('xxx' * 2000)
 
         @storeable_record.response = Digest::SHA1.hexdigest(@storeable_record.response)
         @storeable_record.save!
@@ -70,7 +74,7 @@ module HttpStore
       end
 
       def storable_string(str)
-        str = str.clone.force_encoding("UTF-8")
+        str = str.dup.force_encoding("UTF-8")
         raise EncodingError unless str.encoding.name == 'UTF-8'
         raise EncodingError unless str.valid_encoding?
 
