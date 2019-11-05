@@ -28,10 +28,9 @@ module HttpStore
         @meta.parent_id   = storeable_record.id if use_cache?
         @storeable_record = HttpStore.config.store_class.new(gen_storable_meta)
         @storeable_record.save!
-      rescue
-        p @storeable_record.response.class
-        p @storeable_record.response.encoding.name
-        p 'zzzz' * 200
+      rescue ActiveRecord::StatementInvalid
+        @storeable_record.response = Digest::SHA1.hexdigest(@storeable_record.response)
+        @storeable_record.save!
       end
 
       def use_cache?
@@ -41,9 +40,14 @@ module HttpStore
       def gen_storable_meta
         @meta.slice(*HttpStore::STORE_KEYS).map do |k, v|
           storable_v = storable(v)
-          storable_v = storable_v.to_json[0..STRING_LIMIT_SIZE] if v.is_a?(Hash) || v.is_a?(Array)
 
-          [k, storable_v]
+          begin
+            storable_v = storable_v.to_json[0..STRING_LIMIT_SIZE] if v.is_a?(Hash) || v.is_a?(Array)
+
+            [k, storable_v]
+          rescue JSON::GeneratorError
+            [k, storable_v.to_s[0..STRING_LIMIT_SIZE]]
+          end
         end.to_h
       end
 
@@ -64,14 +68,8 @@ module HttpStore
       end
 
       def storable_string(str)
-        p str.encoding.name
-        p 'xxx' * 200
-
         str = str.clone.encode('UTF-8')
         raise EncodingError unless str.encoding.name == 'UTF-8'
-
-        p str.encoding.name
-        p 'yyyy' * 200
 
         str.length > STRING_LIMIT_SIZE ? { digest: Digest::SHA1.hexdigest(str), origin: str[0..1000] } : str
       rescue EncodingError
