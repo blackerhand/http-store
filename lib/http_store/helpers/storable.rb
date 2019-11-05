@@ -29,6 +29,8 @@ module HttpStore
         @storeable_record = HttpStore.config.store_class.new(gen_storable_meta)
         @storeable_record.save!
       rescue ActiveRecord::StatementInvalid
+        debugger
+
         @storeable_record.response = Digest::SHA1.hexdigest(@storeable_record.response)
         @storeable_record.save!
       end
@@ -68,8 +70,9 @@ module HttpStore
       end
 
       def storable_string(str)
-        str = str.clone.encode('UTF-8')
+        str = str.force_encoding("UTF-8")
         raise EncodingError unless str.encoding.name == 'UTF-8'
+        raise EncodingError unless str.valid_encoding?
 
         str.length > STRING_LIMIT_SIZE ? { digest: Digest::SHA1.hexdigest(str), origin: str[0..1000] } : str
       rescue EncodingError
