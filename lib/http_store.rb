@@ -18,6 +18,7 @@ module HttpStore
   STORE_KEYS  = REQUEST_KEYS + RESPONSE_KEYS + META_KEYS
 
   class RequestError < StandardError; end
+  class EncodingError < StandardError; end
 
   module Helpers
     extend ActiveSupport::Autoload
