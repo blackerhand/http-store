@@ -70,7 +70,7 @@ module HttpStore
       end
 
       def storable_string(str)
-        str = str.force_encoding("UTF-8")
+        str = str.clone.force_encoding("UTF-8")
         raise EncodingError unless str.encoding.name == 'UTF-8'
         raise EncodingError unless str.valid_encoding?
 
