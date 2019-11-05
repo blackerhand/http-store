@@ -28,6 +28,8 @@ module HttpStore
         @meta.parent_id   = storeable_record.id if use_cache?
         @storeable_record = HttpStore.config.store_class.new(gen_storable_meta)
         @storeable_record.save!
+      rescue
+        debugger
       end
 
       def use_cache?
