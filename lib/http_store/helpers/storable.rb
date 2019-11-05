@@ -28,15 +28,6 @@ module HttpStore
         @meta.parent_id   = storeable_record.id if use_cache?
         @storeable_record = HttpStore.config.store_class.new(gen_storable_meta)
         @storeable_record.save!
-      rescue ActiveRecord::StatementInvalid
-
-        Rails.logger.info(@storeable_record.response)
-        Rails.logger.info(@storeable_record.response.encoding)
-        Rails.logger.info(@storeable_record.response.first.encoding)
-        Rails.logger.info('xxx' * 2000)
-
-        @storeable_record.response = Digest::SHA1.hexdigest(@storeable_record.response)
-        @storeable_record.save!
       end
 
       def use_cache?
