@@ -29,7 +29,9 @@ module HttpStore
         @storeable_record = HttpStore.config.store_class.new(gen_storable_meta)
         @storeable_record.save!
       rescue
-        debugger
+        p @storeable_record.response.class
+        p @storeable_record.response.encoding.name
+        p 'zzzz' * 200
       end
 
       def use_cache?
@@ -62,8 +64,14 @@ module HttpStore
       end
 
       def storable_string(str)
+        p str.encoding.name
+        p 'xxx' * 200
+
         str = str.clone.encode('UTF-8')
         raise EncodingError unless str.encoding.name == 'UTF-8'
+
+        p str.encoding.name
+        p 'yyyy' * 200
 
         str.length > STRING_LIMIT_SIZE ? { digest: Digest::SHA1.hexdigest(str), origin: str[0..1000] } : str
       rescue EncodingError
