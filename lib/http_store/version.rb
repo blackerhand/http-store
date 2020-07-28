@@ -1,3 +1,3 @@
 module HttpStore
-  VERSION = "0.3.27"
+  VERSION = "0.5.0"
 end
