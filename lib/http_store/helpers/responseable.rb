@@ -6,6 +6,10 @@ module HttpStore
         status_code >= 200 && status_code < 400
       end
 
+      def need_retry?
+        !response_valid?
+      end
+
       def json_response?
         response_headers_hash['content_type'].to_s =~ /json/
       end

@@ -15,17 +15,19 @@ module HttpStore
       build_request
 
       return unless request_valid?
-
-      # exist request or not force, return
       load_storeable_record and return if use_cache?
 
       execute # send request
-      raise HttpStore::RequestError, 'response_obj is nil' if response_obj.nil?
+      retry! while need_retry? && retry_times.to_i > 0
 
-      build_response
       after_response
-    ensure
-      store_request
+    end
+
+    def retry!
+      @meta.retry_times = retry_times.to_i - 1
+      @meta.force       = true
+
+      execute
     end
 
     HttpStore::ALL_KEYS.each do |meta_key|
@@ -47,6 +49,11 @@ module HttpStore
 
     def execute
       @meta.response_obj = get? ? http_get_execute : http_post_execute
+      raise HttpStore::RequestError, 'response_obj is nil' if response_obj.nil?
+
+      build_response
+    ensure
+      store_request
     end
 
     def http_get_execute
