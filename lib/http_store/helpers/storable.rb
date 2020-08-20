@@ -1,7 +1,8 @@
 module HttpStore
   module Helpers
     module Storable
-      STRING_LIMIT_SIZE = 5000
+      STRING_LIMIT_SIZE = 1000
+      TEXT_LIMIT_SIZE   = 10000
 
       def storeable_record
         return unless HttpStore.config.store_enable
@@ -39,11 +40,11 @@ module HttpStore
           storable_v = storable(v)
 
           begin
-            storable_v = storable_v.to_json[0..STRING_LIMIT_SIZE] if v.is_a?(Hash) || v.is_a?(Array)
+            storable_v = storable_v.to_json[0..TEXT_LIMIT_SIZE] if v.is_a?(Hash) || v.is_a?(Array)
 
             [k, storable_v]
           rescue JSON::GeneratorError
-            [k, storable_v.to_s[0..STRING_LIMIT_SIZE]]
+            [k, storable_v.to_s[0..TEXT_LIMIT_SIZE]]
           end
         end.to_h
       end
@@ -69,7 +70,7 @@ module HttpStore
         raise EncodingError unless str.encoding.name == 'UTF-8'
         raise EncodingError unless str.valid_encoding?
 
-        str.length > STRING_LIMIT_SIZE ? { digest: Digest::SHA1.hexdigest(str), origin: str[0..1000] } : str
+        str.length > STRING_LIMIT_SIZE ? { digest: Digest::SHA1.hexdigest(str), origin: str[0..STRING_LIMIT_SIZE] } : str
       rescue EncodingError
         { digest: Digest::SHA1.hexdigest(str) }
       end
