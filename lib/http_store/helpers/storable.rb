@@ -1,7 +1,7 @@
 module HttpStore
   module Helpers
     module Storable
-      STRING_LIMIT_SIZE = 30_000
+      STRING_LIMIT_SIZE = 5000
 
       def storeable_record
         return unless HttpStore.config.store_enable
