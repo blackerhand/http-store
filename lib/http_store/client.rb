@@ -66,7 +66,8 @@ module HttpStore
 
     def http_post_execute
       real_data = json_request? ? data.to_json : data.to_hash
-      RestClient.post(uri, real_data, headers.symbolize_keys)
+      # RestClient.post(uri, real_data, headers.symbolize_keys)
+      RestClient::Request.execute(method: :post, url: url, payload: real_data, headers: headers.symbolize_keys, verify_ssl: false)
     rescue RestClient::ExceptionWithResponse => e
       # :nocov:
       e.response

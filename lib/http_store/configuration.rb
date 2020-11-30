@@ -1,6 +1,6 @@
 module HttpStore
   class Configuration
-    attr_writer :store_enable, :store_class
+    attr_writer :store_enable, :store_class, :store_time
 
     def store_enable
       @store_enable || true
