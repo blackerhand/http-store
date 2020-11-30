@@ -9,5 +9,9 @@ module HttpStore
     def store_class
       @store_class || HttpStore::HttpLog
     end
+
+    def store_time
+      @store_time || 31_536_000
+    end
   end
 end

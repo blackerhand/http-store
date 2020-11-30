@@ -7,7 +7,8 @@ module HttpStore
       def storeable_record
         return unless HttpStore.config.store_enable
 
-        @storeable_record ||= HttpStore.config.store_class.where(request_digest: @meta.request_digest, cache_response: true).order(id: :desc).first
+        expired_time      = Time.current - HttpStore.config.store_time
+        @storeable_record ||= HttpStore.config.store_class.where('created_at > ?', expired_time).where(request_digest: @meta.request_digest, cache_response: true).order(id: :desc).first
       end
 
       def load_storeable_record
