@@ -27,14 +27,14 @@ Gem::Specification.new do |spec|
   spec.executables   = spec.files.grep(%r{^exe/}) { |f| File.basename(f) }
   spec.require_paths = ["lib"]
 
-  spec.add_dependency "rest-client", '~> 2.0'
-  spec.add_dependency "hashie", '~> 3.0'
-  spec.add_dependency "activerecord", '>= 5.0', '< 6.1'
-  spec.add_dependency "rails", ">= 5", "< 7"
+  spec.add_dependency "rest-client"
+  spec.add_dependency "hashie"
+  spec.add_dependency "activerecord"
+  spec.add_dependency "rails"
 
-  spec.add_development_dependency "bundler", "~> 2.0"
-  spec.add_development_dependency "rake", "~> 10.0"
-  spec.add_development_dependency "rspec", "~> 3.0"
-  spec.add_development_dependency "byebug", "~> 11.0"
+  spec.add_development_dependency "bundler"
+  spec.add_development_dependency "rake"
+  spec.add_development_dependency "rspec"
+  spec.add_development_dependency "byebug"
 end
 
