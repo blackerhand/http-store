@@ -24,7 +24,7 @@ first, you need create migration whit this command.
 
 ```bash
 rake http_store_engine:install:migrations # create table(default)
-rails generator http_store:initializer    # create global settings
+rails g http_store:initializer    # create global settings
 ```
 
 
@@ -69,6 +69,15 @@ class BaseClient < HttpStore::Client
     end
   end
 end
+```
+
+### store all rails request
+
+```ruby
+# config/application.rb
+
+config.middleware.use HttpStore::Middleware::RequestLog
+
 ```
 
 ### HttpStore::HttpLog
