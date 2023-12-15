@@ -1,6 +1,6 @@
 class CreateHttpLogs < ActiveRecord::Migration[5.2]
   def change
-    create_table "http_logs_#{i}" do |t|
+    create_table "http_logs" do |t|
       # request
       t.string :http_method, limit: 10, comment: '请求方法'
       t.text :url, comment: '请求 URL'
