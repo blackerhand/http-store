@@ -101,4 +101,4 @@ To install this gem onto your local machine, run `bundle exec rake install`. To 
 
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/http_store.
+Bug reports and pull requests are welcome on GitHub at https://github.com/blackerhand/http-store.
