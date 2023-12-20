@@ -1,7 +1,7 @@
 PATH
   remote: .
   specs:
-    http_store (0.6.0)
+    http_store (0.6.1)
       activerecord
       hashie
       rails
