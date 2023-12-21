@@ -33,7 +33,7 @@ module HttpStore
       end
 
       def store_class
-        @store_class ||= HttpStore.config.store_class.constantize
+        @store_class ||= HttpStore.config.store_class.to_s.constantize
       end
 
       def use_cache?
