@@ -57,7 +57,7 @@ module HttpStore
     end
 
     def verify_ssl
-      other_params[:verify_ssl] || false
+      !!other_params[:verify_ssl]
     end
 
     def http_get_execute
