@@ -56,8 +56,12 @@ module HttpStore
       store_request
     end
 
+    def verify_ssl
+      other_params[:verify_ssl] || false
+    end
+
     def http_get_execute
-      RestClient.get(uri, headers)
+      RestClient::Request.execute(method: :get, url: uri, headers: headers.symbolize_keys, verify_ssl: verify_ssl)
     rescue RestClient::ExceptionWithResponse => e
       # :nocov:
       e.response
@@ -67,7 +71,7 @@ module HttpStore
     def http_post_execute
       real_data = json_request? ? data.to_json : data.to_hash
       # RestClient.post(uri, real_data, headers.symbolize_keys)
-      RestClient::Request.execute(method: :post, url: url, payload: real_data, headers: headers.symbolize_keys, verify_ssl: false)
+      RestClient::Request.execute(method: :post, url: url, payload: real_data, headers: headers.symbolize_keys, verify_ssl: verify_ssl)
     rescue RestClient::ExceptionWithResponse => e
       # :nocov:
       e.response
