@@ -48,7 +48,15 @@ module HttpStore
     end
 
     def execute
-      @meta.response_obj = get? ? http_get_execute : http_post_execute
+      @meta.response_obj =
+        begin
+          get? ? http_get_execute : http_post_execute
+        rescue RestClient::ExceptionWithResponse => e
+          e.response
+          # rescue Errno::ECONNREFUSED => e
+          #   Hashie::Mash.new(code: 500, body: e.message)
+        end
+
       raise HttpStore::RequestError, 'response_obj is nil' if response_obj.nil?
 
       build_response
@@ -62,21 +70,12 @@ module HttpStore
 
     def http_get_execute
       RestClient::Request.execute(method: :get, url: uri, headers: headers.symbolize_keys, verify_ssl: verify_ssl)
-    rescue RestClient::ExceptionWithResponse => e
-      # :nocov:
-      e.response
-      # :nocov:
     end
 
     def http_post_execute
       real_data = json_request? ? data.to_json : data.to_hash
       # RestClient.post(uri, real_data, headers.symbolize_keys)
       RestClient::Request.execute(method: :post, url: uri, payload: real_data, headers: headers.symbolize_keys, verify_ssl: verify_ssl)
-    rescue RestClient::ExceptionWithResponse => e
-      # :nocov:
-      e.response
-      # :nocov:
     end
   end
 end
-
