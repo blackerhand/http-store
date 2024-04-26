@@ -23,7 +23,7 @@ module HttpStore
         @meta.response_code  = build_response_code
         @meta.response_data  = build_response_data
         @meta.cache_response = cache_response?
-        raise HttpStore::RequestError, '三方请求异常, 请与管理员联系' if response_data.blank?
+        raise HttpStore::RequestError, '三方请求异常, 请与管理员联系' if response_data.nil?
       end
 
       def build_response_data
