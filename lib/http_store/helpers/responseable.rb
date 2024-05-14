@@ -24,6 +24,9 @@ module HttpStore
         @meta.response_data  = build_response_data
         @meta.cache_response = cache_response?
         raise HttpStore::RequestError, '三方请求异常, 请与管理员联系' if response_data.nil?
+
+        Rails.logger.info "#{uri}: response: #{response}"
+        Rails.logger.info "#{uri}: response_data: #{response_data}"
       end
 
       def build_response_data
