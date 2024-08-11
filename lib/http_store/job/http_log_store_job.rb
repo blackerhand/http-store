@@ -1,6 +1,6 @@
 module HttpStore
   module Job
-    class HttpLogStoreJob < ApplicationJob
+    class HttpLogStoreJob < ::ActiveJob::Base
       queue_as :default
 
       def perform(meta)
