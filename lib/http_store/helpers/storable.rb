@@ -27,7 +27,8 @@ module HttpStore
       def store_request
         return unless HttpStore.config.store_enable
 
-        @meta.parent_id   = storeable_record.id if use_cache?
+        @meta.parent_id = storeable_record.id if use_cache?
+        # HttpStore::Job::HttpLogStoreJob.perform_later(gen_storable_meta)
         @storeable_record = store_class.new(gen_storable_meta)
         @storeable_record.save!
       end
