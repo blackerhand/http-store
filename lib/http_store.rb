@@ -4,7 +4,7 @@ require 'active_support/core_ext/module'
 require 'hashie'
 require 'rest-client'
 require 'http_store/engine'
-# require 'http_store/job/http_log_store_job'
+require 'http_store/job/http_log_store_job'
 
 module HttpStore
   extend ActiveSupport::Autoload
