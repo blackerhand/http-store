@@ -15,14 +15,16 @@ module HttpStore
       end
 
       def build_response
-        @meta.status_code      = response_obj.code
-        @meta.response         = json_safe_parse(response_obj.body)
-        @meta.response_headers = response_obj.headers
+        response       = json_safe_parse(response_obj.body)
+        response       = { original: response } unless response.is_a?(Hash)
+        @meta.response = response
 
-        @meta.response_valid = response_valid?
-        @meta.response_code  = build_response_code
-        @meta.response_data  = build_response_data
-        @meta.cache_response = cache_response?
+        @meta.status_code      = response_obj.code
+        @meta.response_headers = response_obj.headers
+        @meta.response_valid   = response_valid?
+        @meta.response_code    = build_response_code
+        @meta.response_data    = build_response_data
+        @meta.cache_response   = cache_response?
         raise HttpStore::RequestError, '三方请求异常, 请与管理员联系' if response_data.nil?
 
         Rails.logger.info "#{uri}: response: #{response}"
