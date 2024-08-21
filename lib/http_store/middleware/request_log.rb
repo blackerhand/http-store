@@ -14,7 +14,7 @@ module HttpStore
         [status, headers, body]
       ensure
         build_meta(env, status, headers, body)
-        store_request
+        store_request(false)
       end
 
       def build_meta(env, status, headers, body)

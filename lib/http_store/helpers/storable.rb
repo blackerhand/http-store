@@ -24,13 +24,16 @@ module HttpStore
       end
 
       # you can rewrite this callback, to store the request
-      def store_request
+      def store_request(save_now = true)
         return unless HttpStore.config.store_enable
 
-        @meta.parent_id = storeable_record.id if use_cache?
-        HttpStore::Job::HttpLogStoreJob.perform_later(gen_storable_meta)
-        # @storeable_record = store_class.new(gen_storable_meta)
-        # @storeable_record.save!
+        if save_now
+          @storeable_record = store_class.new(gen_storable_meta)
+          @storeable_record.save!
+        else
+          @meta.parent_id = storeable_record.id if use_cache?
+          HttpStore::Job::HttpLogStoreJob.perform_later(gen_storable_meta)
+        end
       end
 
       def store_class
