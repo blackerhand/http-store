@@ -16,7 +16,7 @@ module HttpStore
 
       def build_response
         response       = json_safe_parse(response_obj.body)
-        response       = { original: response } unless response.is_a?(Hash)
+        response       = { original: response } if response.is_a?(String)
         @meta.response = response
 
         @meta.status_code      = response_obj.code
