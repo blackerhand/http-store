@@ -16,6 +16,8 @@ module HttpStore
       end
 
       def uri
+        return url if query_params.blank?
+
         "#{url}?#{query_params.to_query}"
       end
 
