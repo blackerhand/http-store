@@ -30,7 +30,7 @@ module HttpStore
       end
 
       def format_request
-        @meta.http_method = get? ? 'GET' : 'POST' # only support get/post
+        @meta.http_method = http_method.downcase
 
         @meta.headers                ||= { charset: 'UTF-8' }
         @meta.headers[:content_type] = :json if json_request?
