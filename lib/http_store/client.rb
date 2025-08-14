@@ -73,7 +73,7 @@ module HttpStore
     end
 
     def http_post_execute
-      real_data = json_request? ? data.to_json : data.to_hash
+      real_data = json_request? ? data.to_json : data
       # RestClient.post(uri, real_data, headers.symbolize_keys)
 
       RestClient::Request.execute(method: @meta.http_method, url: uri, payload: real_data, headers: headers.to_h.symbolize_keys, verify_ssl: verify_ssl)
