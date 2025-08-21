@@ -13,8 +13,10 @@ module HttpStore
         status, headers, body = @app.call(env)
         [status, headers, body]
       ensure
-        build_meta(env, status, headers, body)
-        store_request
+        unless headers.try(:[], 'skip-http-store')
+          build_meta(env, status, headers, body)
+          store_request
+        end
       end
 
       def build_meta(env, status, headers, body)
